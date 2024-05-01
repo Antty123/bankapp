@@ -5,8 +5,10 @@ import db_objs.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class BankingAppGui extends BaseFrame{
+public class BankingAppGui extends BaseFrame implements ActionListener {
     private JTextField currentBalanceField;
     public JTextField getCurrentBalanceField() {return currentBalanceField;}
     public BankingAppGui(User user){
@@ -41,26 +43,31 @@ public class BankingAppGui extends BaseFrame{
         JButton depositButton = new JButton("Дэп");
         depositButton.setBounds(15, 180, getWidth()-50, 50);
         depositButton.setFont(new Font("Dialog",Font.BOLD, 22));
+        depositButton.addActionListener(this);
         add(depositButton);
 
         JButton withdrawButton = new JButton("Вывод");
         withdrawButton.setBounds(15, 250, getWidth()-50, 50);
         withdrawButton.setFont(new Font("Dialog",Font.BOLD, 22));
+        withdrawButton.addActionListener(this);
         add(withdrawButton);
 
         JButton pastTransactionButton = new JButton("Прошлые Транзакции");
         pastTransactionButton.setBounds(15, 320, getWidth()-50, 50);
         pastTransactionButton.setFont(new Font("Dialog",Font.BOLD, 22));
+        pastTransactionButton.addActionListener(this);
         add(pastTransactionButton);
 
-        JButton transferButton = new JButton("Переводы");
+        JButton transferButton = new JButton("Перевод");
         transferButton.setBounds(15,390,getWidth()-50, 50);
         transferButton.setFont(new Font("Dialog",Font.BOLD, 22));
+        transferButton.addActionListener(this);
         add(transferButton);
 
         JButton logutButton = new JButton("Выход");
         logutButton.setBounds(15,500,getWidth()-50, 50);
         logutButton.setFont(new Font("Dialog",Font.BOLD, 22));
+        logutButton.addActionListener(this);
         add(logutButton);
 
 
@@ -68,5 +75,36 @@ public class BankingAppGui extends BaseFrame{
 
 
 
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String buttonPressed = e.getActionCommand();
+        if (buttonPressed.equalsIgnoreCase("Выход")){
+            new LoginGui().setVisible(true);
+            this.dispose();
+            return;
+        }
+        BankingAppDialog bankingAppDialog = new BankingAppDialog(this, user);
+        bankingAppDialog.setTitle(buttonPressed);
+
+
+        if (buttonPressed.equalsIgnoreCase("Дэп")|| buttonPressed.equalsIgnoreCase("Вывод")
+                || buttonPressed.equalsIgnoreCase("Перевод")){
+            bankingAppDialog.addCurrentBalanceAmount();
+
+            bankingAppDialog.addActionButton(buttonPressed);
+
+            if (buttonPressed.equalsIgnoreCase("Перевод")){
+                bankingAppDialog.addUserField();
+
+            }
+
+        } else if (buttonPressed.equalsIgnoreCase("Прошлые Транзакции")) {
+            bankingAppDialog.addPassTransactionComponents();
+
+        }
+
+        bankingAppDialog.setVisible(true);
     }
 }
